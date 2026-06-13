@@ -18,6 +18,7 @@
 | [04-ai-design-automation.md](04-ai-design-automation.md) | **AI Design Automation** — Quy tắc dùng AI bám sát SRS | Designer / AI |
 | [05-design-fe-handoff.md](05-design-fe-handoff.md) | **Handoff** — Checklist bàn giao Design ↔ Front-end | Designer / FE |
 | [06-responsive.md](06-responsive.md) | **Responsive** — Quy tắc responsive từ design đến build | Designer / FE |
+| [07-deploy.md](07-deploy.md) | **Deploy** — Đẩy GitHub & deploy frontend + backend lên Render | DevOps / Dev |
 
 ---
 

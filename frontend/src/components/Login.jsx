@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Lock, User, ShieldAlert, ArrowLeft, KeyRound, ShieldCheck } from 'lucide-react';
+import { api } from '../api';
 
 export default function Login({ onLoginSuccess, onBackToPortfolio }) {
   const [username, setUsername] = useState('');
@@ -18,7 +19,7 @@ export default function Login({ onLoginSuccess, onBackToPortfolio }) {
     setError('');
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(api('/api/auth/login'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

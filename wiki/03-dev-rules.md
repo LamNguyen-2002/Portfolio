@@ -60,6 +60,7 @@ Proto/
 4. **Merge an toàn khi update profile** — `{ ...db.profile, ...newProfile }` để không xoá trường không gửi lên.
 5. **Validate input** — `projects` phải là array; login phải đủ `username` + `password`; đổi mật khẩu phải khớp mật khẩu cũ.
 6. **Mã trạng thái HTTP đúng nghĩa** — 400 (thiếu dữ liệu), 401 (chưa xác thực), 403 (token sai/hết hạn), 500 (lỗi ghi file).
+7. **Body limit** — `express.json({ limit: '5mb' })` để chứa ảnh avatar base64 (`profile.avatar`). Ảnh đã được nén về 320px ở client trước khi gửi để giữ `db.json` nhẹ.
 
 ---
 

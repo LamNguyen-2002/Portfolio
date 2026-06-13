@@ -15,6 +15,7 @@ dist-ssr
 # Env & secrets
 .env
 .env.*
+!.env.example
 
 # Local agent / editor state
 .claude/

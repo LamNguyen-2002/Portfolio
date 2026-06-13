@@ -3,6 +3,7 @@ import BackgroundEffect from './components/BackgroundEffect';
 import Portfolio from './components/Portfolio';
 import Login from './components/Login';
 import Admin from './components/Admin';
+import { api } from './api';
 
 // Default static fallback data — mirrors server/db.json (Nguyễn Tùng Lâm's real CV)
 const fallbackData = {
@@ -131,7 +132,7 @@ export default function App() {
   // Read data from settings on mount or refresh
   const loadPortfolioData = async () => {
     try {
-      const res = await fetch('/api/settings');
+      const res = await fetch(api('/api/settings'));
       if (res.ok) {
         const data = await res.json();
         if (data.profile) setProfile(data.profile);

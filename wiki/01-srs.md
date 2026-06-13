@@ -38,6 +38,7 @@ Lấy trực tiếp từ CV của chủ sở hữu — khớp với [`backend/db
 | `name` | string | ✅ | Họ tên — *Nguyễn Tùng Lâm* |
 | `title` | string | ✅ | Chức danh — *UI/UX Designer · hướng tới Product Designer* |
 | `bio` | string | ✅ | Giới thiệu ngắn (mục tiêu nghề nghiệp) |
+| `avatar` | string (data URL) | – | Ảnh đại diện base64 — tải lên & nén ở Admin |
 | `email` | string | ✅ | `ntlam2211@gmail.com` |
 | `phone` | string | – | `0974 149 916` |
 | `location` | string | – | `Bồ Đề, Hà Nội` |
@@ -80,6 +81,7 @@ Lấy trực tiếp từ CV của chủ sở hữu — khớp với [`backend/db
 | **FR-08** | Đăng nhập JWT | Sai → 401; đúng → trả token + `expiresAt` (2h) |
 | **FR-09** | Tự đăng xuất khi hết hạn | FE kiểm tra `expiresAt`, hết hạn → về Login |
 | **FR-10** | Sửa hồ sơ cá nhân | POST `/api/settings/profile`, yêu cầu JWT, merge & lưu |
+| **FR-10b** | Tải & cập nhật ảnh đại diện | Admin chọn ảnh → tự cắt vuông + nén 320px → base64 vào `profile.avatar`; hiển thị ở Hero |
 | **FR-11** | CRUD dự án | POST `/api/settings/projects`, yêu cầu JWT |
 | **FR-12** | Đổi mật khẩu | Kiểm tra mật khẩu cũ, hash mật khẩu mới bằng bcrypt |
 | **FR-13** | Xem payload/header JWT đã giải mã | Hiển thị log token đang hoạt động trong Admin |

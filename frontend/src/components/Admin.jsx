@@ -18,6 +18,7 @@ import {
   Camera,
   Trash
 } from 'lucide-react';
+import { api } from '../api';
 
 const Github = ({ size = 24, ...props }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -62,7 +63,7 @@ export default function Admin({ token, expiresAt, onLogout, onUpdateData }) {
     // Fetch initial admin config data
     const fetchData = async () => {
       try {
-        const res = await fetch('/api/settings');
+        const res = await fetch(api('/api/settings'));
         const data = await res.json();
         if (data.profile) setProfile(data.profile);
         if (data.projects) setProjects(data.projects);
@@ -108,7 +109,7 @@ export default function Admin({ token, expiresAt, onLogout, onUpdateData }) {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch('/api/settings/profile', {
+      const res = await fetch(api('/api/settings/profile'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -202,7 +203,7 @@ export default function Admin({ token, expiresAt, onLogout, onUpdateData }) {
   const handleSaveProjects = async (updatedProjects) => {
     setLoading(true);
     try {
-      const res = await fetch('/api/settings/projects', {
+      const res = await fetch(api('/api/settings/projects'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -275,7 +276,7 @@ export default function Admin({ token, expiresAt, onLogout, onUpdateData }) {
 
     setLoading(true);
     try {
-      const res = await fetch('/api/settings/change-password', {
+      const res = await fetch(api('/api/settings/change-password'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

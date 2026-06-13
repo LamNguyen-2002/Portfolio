@@ -1,0 +1,49 @@
+# Render Blueprint — deploys BOTH the backend (Node web service) and the
+# frontend (static site) from this monorepo in one go.
+# Docs: https://render.com/docs/blueprint-spec
+#
+# How to use:
+#   1. Push this repo to GitHub.
+#   2. Render Dashboard → New → Blueprint → chọn repo này.
+#   3. Render đọc file này và tạo 2 service tự động.
+#
+# ⚠️ Lưu trữ: backend ghi vào db.json. Trên gói FREE, ổ đĩa là tạm thời —
+# thay đổi ở Admin sẽ MẤT khi service restart/redeploy. Để giữ vĩnh viễn,
+# bật khối `disk:` bên dưới (cần gói trả phí) hoặc chuyển sang DB ngoài.
+
+services:
+  # ---- BACKEND: Express + JWT ----
+  - type: web
+    name: portfolio-backend
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/settings
+    envVars:
+      - key: JWT_SECRET
+        generateValue: true        # Render tự sinh secret an toàn
+    # Bật khối này (gói trả phí) để db.json không bị reset:
+    # disk:
+    #   name: portfolio-data
+    #   mountPath: /opt/render/project/src/backend
+    #   sizeGB: 1
+
+  # ---- FRONTEND: React + Vite (static) ----
+  - type: web
+    name: portfolio-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_BASE          # baked vào lúc build để gọi đúng backend
+        fromService:
+          type: web
+          name: portfolio-backend
+          property: host
+    routes:
+      - type: rewrite               # SPA fallback cho client-side routing
+        source: /*
+        destination: /index.html
