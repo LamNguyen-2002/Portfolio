@@ -388,112 +388,195 @@ export default function Portfolio({ profile, projects, onAdminClick, onOpenProje
       )}
 
       {/* CLIMBING JOURNEY SECTION */}
-      {Array.isArray(profile.climbingSteps) && profile.climbingSteps.length > 0 && (
-        <section id="climb" className="container section">
-          <div className="section-head" data-reveal>
-            <span className="eyebrow" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-              <MountainIcon size={14} /> Chinh phục
-            </span>
-            <h2 className="glow-text">Hành trình Leo núi Cuộc đời</h2>
-          </div>
+      {Array.isArray(profile.climbingSteps) && profile.climbingSteps.length > 0 && (() => {
+        const totalSteps = profile.climbingSteps.length;
+        const stepWidth = 300;
+        const totalWidth = 200 + (totalSteps - 1) * stepWidth;
+        
+        // Generate winding bezier path
+        let windingPath = '';
+        if (totalSteps > 0) {
+          windingPath = `M 100 ${240 + (0 % 2 === 0 ? 80 : -80)}`;
+          for (let i = 1; i < totalSteps; i++) {
+            const x0 = 100 + (i - 1) * stepWidth;
+            const y0 = 240 + ((i - 1) % 2 === 0 ? 80 : -80);
+            const x1 = 100 + i * stepWidth;
+            const y1 = 240 + (i % 2 === 0 ? 80 : -80);
+            
+            const cp1x = x0 + stepWidth / 2;
+            const cp1y = y0;
+            const cp2x = x1 - stepWidth / 2;
+            const cp2y = y1;
+            
+            windingPath += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${x1} ${y1}`;
+          }
+        }
 
-          <div className="climb-timeline">
-            {/* The vertical climbing path line */}
-            <div className="climb-line" style={{ 
-              position: 'absolute', 
-              left: '50%', 
-              top: '0', 
-              bottom: '0', 
-              width: '4px', 
-              background: 'linear-gradient(to bottom, var(--primary-color), var(--secondary-color), var(--cyan-accent))',
-              transform: 'translateX(-50%)',
-              borderRadius: '2px',
-              opacity: 0.2
-            }} />
+        return (
+          <section id="climb" className="container section">
+            <div className="section-head" data-reveal style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '20px', flexWrap: 'wrap' }}>
+              <div>
+                <span className="eyebrow" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                  <MountainIcon size={14} /> Chinh phục
+                </span>
+                <h2 className="glow-text" style={{ margin: 0 }}>Hành trình Leo núi Cuộc đời</h2>
+              </div>
+              <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(255,255,255,0.03)', padding: '6px 12px', borderRadius: '20px', border: '1px solid var(--border-color)', marginBottom: '8px' }}>
+                <span>Cuộn ngang để xem hành trình</span>
+                <span style={{ animation: 'bounceX 1.6s infinite', display: 'inline-block' }}>➔</span>
+              </div>
+            </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', position: 'relative' }}>
-              {profile.climbingSteps.map((step, i) => {
-                const isEven = i % 2 === 0;
-                return (
-                  <div 
-                    key={i} 
-                    style={{ 
-                      display: 'flex', 
-                      justifyContent: isEven ? 'flex-start' : 'flex-end', 
-                      alignItems: 'center',
-                      position: 'relative',
-                      width: '100%' 
-                    }}
-                    data-reveal
-                  >
-                    {/* Central Node representing the camp */}
-                    <div style={{ 
-                      position: 'absolute', 
-                      left: '50%', 
-                      transform: 'translateX(-50%)',
-                      width: '34px', 
-                      height: '34px', 
-                      borderRadius: '50%', 
-                      background: 'var(--bg-card)', 
-                      border: '2px solid ' + (i === profile.climbingSteps.length - 1 ? 'var(--primary-color)' : 'var(--secondary-color)'),
-                      boxShadow: '0 0 12px ' + (i === profile.climbingSteps.length - 1 ? 'rgba(0, 255, 136, 0.4)' : 'rgba(139, 92, 246, 0.4)'),
-                      zIndex: 2,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: i === profile.climbingSteps.length - 1 ? 'var(--primary-color)' : 'var(--secondary-color)',
-                      backdropFilter: 'blur(5px)'
-                    }}>
-                      {getClimbIcon(step.icon)}
-                    </div>
+            <div className="climb-scroll-outer" style={{ 
+              overflowX: 'auto', 
+              overflowY: 'hidden', 
+              position: 'relative', 
+              padding: '20px 0 40px',
+              margin: '0 -24px',
+              paddingLeft: '24px',
+              paddingRight: '24px',
+              WebkitOverflowScrolling: 'touch'
+            }}>
+              <div className="climb-scroll-inner" style={{ 
+                width: `${totalWidth}px`, 
+                height: '480px', 
+                position: 'relative' 
+              }}>
+                {/* Winding SVGs */}
+                <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1 }} viewBox={`0 0 ${totalWidth} 480`}>
+                  <defs>
+                    <linearGradient id="climb-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="var(--primary-color)" />
+                      <stop offset="50%" stopColor="var(--secondary-color)" />
+                      <stop offset="100%" stopColor="var(--cyan-accent)" />
+                    </linearGradient>
+                  </defs>
+                  
+                  {/* Glowing background path */}
+                  <path 
+                    d={windingPath} 
+                    fill="none" 
+                    stroke="var(--cyan-accent)" 
+                    strokeWidth="12" 
+                    strokeLinecap="round"
+                    style={{ opacity: 0.08, filter: 'blur(6px)' }}
+                  />
 
-                    {/* Card container */}
-                    <div 
-                      className="glass-card climb-card"
-                      style={{ 
-                        width: '45%', 
-                        padding: '16px 24px', 
-                        border: '1px solid rgba(255, 255, 255, 0.05)',
-                        background: 'rgba(255, 255, 255, 0.02)',
-                        textAlign: isEven ? 'right' : 'left',
-                        position: 'relative',
-                        transition: 'all 0.3s ease',
-                        cursor: 'default'
-                      }}
-                    >
-                      {/* Altitude / Camp badge */}
-                      <div style={{ 
-                        display: 'flex', 
-                        justifyContent: isEven ? 'flex-end' : 'flex-start', 
-                        alignItems: 'center', 
-                        gap: '8px',
-                        marginBottom: '8px'
+                  {/* Main colorful winding road */}
+                  <path 
+                    d={windingPath} 
+                    fill="none" 
+                    stroke="url(#climb-gradient)" 
+                    strokeWidth="4" 
+                    strokeLinecap="round"
+                    style={{ opacity: 0.8 }}
+                  />
+
+                  {/* Dashed vertical connectors */}
+                  {profile.climbingSteps.map((step, i) => {
+                    const isEven = i % 2 === 0;
+                    const x = 100 + i * stepWidth;
+                    const yNode = 240 + (isEven ? 80 : -80);
+                    const yCardBound = isEven ? 215 : 245;
+                    return (
+                      <line 
+                        key={i}
+                        x1={x}
+                        y1={yNode}
+                        x2={x}
+                        y2={yCardBound}
+                        stroke={isEven ? 'var(--secondary-color)' : 'var(--primary-color)'}
+                        strokeWidth="1.5"
+                        strokeDasharray="4 4"
+                        style={{ opacity: 0.4 }}
+                      />
+                    );
+                  })}
+                </svg>
+
+                {/* Nodes and Cards overlay */}
+                {profile.climbingSteps.map((step, i) => {
+                  const isEven = i % 2 === 0;
+                  const x = 100 + i * stepWidth;
+                  const yNode = 240 + (isEven ? 80 : -80);
+                  const cardTop = isEven ? '25px' : '250px';
+
+                  return (
+                    <React.Fragment key={i}>
+                      {/* Node positioned exactly on the curve */}
+                      <div style={{
+                        position: 'absolute',
+                        left: `${x}px`,
+                        top: `${yNode}px`,
+                        transform: 'translate(-50%, -50%)',
+                        width: '34px',
+                        height: '34px',
+                        borderRadius: '50%',
+                        background: 'var(--bg-card)',
+                        border: '2px solid ' + (i === totalSteps - 1 ? 'var(--primary-color)' : (isEven ? 'var(--secondary-color)' : 'var(--cyan-accent)')),
+                        boxShadow: '0 0 12px ' + (i === totalSteps - 1 ? 'rgba(0, 255, 136, 0.4)' : (isEven ? 'rgba(139, 92, 246, 0.4)' : 'rgba(0, 240, 255, 0.4)')),
+                        zIndex: 3,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: i === totalSteps - 1 ? 'var(--primary-color)' : (isEven ? 'var(--secondary-color)' : 'var(--cyan-accent)'),
+                        backdropFilter: 'blur(5px)'
                       }}>
-                        <span className="badge" style={{ fontSize: '0.75rem', borderColor: 'transparent', background: 'rgba(139, 92, 246, 0.15)', color: 'var(--secondary-color)' }}>
-                          {step.camp}
-                        </span>
-                        <span className="badge primary" style={{ fontSize: '0.75rem' }}>
-                          ALT {step.altitude}
-                        </span>
+                        {getClimbIcon(step.icon)}
                       </div>
 
-                      <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#ffffff', marginBottom: '4px' }}>
-                        {step.title}
-                      </h3>
-                      <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'block', marginBottom: '8px' }}>
-                        {step.year}
-                      </span>
-                      <p style={{ fontSize: '0.9rem', color: 'var(--text-sub)', lineHeight: 1.6 }}>
-                        {step.desc}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
+                      {/* Card positioned above or below the node */}
+                      <div 
+                        className="glass-card climb-card-horizontal"
+                        style={{
+                          position: 'absolute',
+                          left: `${x}px`,
+                          top: cardTop,
+                          transform: 'translateX(-50%)',
+                          width: '260px',
+                          padding: '14px 18px',
+                          border: '1px solid rgba(255, 255, 255, 0.05)',
+                          background: 'rgba(255, 255, 255, 0.02)',
+                          textAlign: 'left',
+                          zIndex: 2,
+                          transition: 'all 0.3s ease',
+                          cursor: 'default'
+                        }}
+                      >
+                        {/* Altitude / Camp badge */}
+                        <div style={{ 
+                          display: 'flex', 
+                          justifyContent: 'flex-start', 
+                          alignItems: 'center', 
+                          gap: '6px',
+                          marginBottom: '6px'
+                        }}>
+                          <span className="badge" style={{ fontSize: '0.7rem', padding: '1px 6px', borderColor: 'transparent', background: 'rgba(139, 92, 246, 0.15)', color: 'var(--secondary-color)' }}>
+                            {step.camp}
+                          </span>
+                          <span className="badge primary" style={{ fontSize: '0.7rem', padding: '1px 6px' }}>
+                            ALT {step.altitude}
+                          </span>
+                        </div>
+
+                        <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#ffffff', marginBottom: '2px' }}>
+                          {step.title}
+                        </h3>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>
+                          {step.year}
+                        </span>
+                        <p style={{ fontSize: '0.82rem', color: 'var(--text-sub)', lineHeight: 1.5, margin: 0 }}>
+                          {step.desc}
+                        </p>
+                      </div>
+                    </React.Fragment>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        </section>
-      )}
+          </section>
+        );
+      })()}
 
       {/* SKILLS SECTION */}
       <section id="skills" className="container section">

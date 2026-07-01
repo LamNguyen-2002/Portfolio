@@ -2049,6 +2049,31 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   transform: translateY(-2px);
 }
+.climb-card-horizontal:hover {
+  border-color: rgba(139, 92, 246, 0.25) !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  transform: translate(-50%, -4px) !important;
+}
+.climb-scroll-outer::-webkit-scrollbar {
+  height: 6px;
+}
+.climb-scroll-outer::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 3px;
+}
+.climb-scroll-outer::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 136, 0.25);
+  border-radius: 3px;
+  transition: background 0.3s;
+}
+.climb-scroll-outer::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 136, 0.45);
+}
+@keyframes bounceX {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
 
 /* Tech Background & Flying Airplane Effects */
 .tech-bg-grid {
