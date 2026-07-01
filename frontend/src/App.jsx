@@ -88,6 +88,13 @@ const fallbackData = {
         desc: "Mài giũa tư duy lập trình và thuật toán. Tham gia phát triển các dự án thực tế trong câu lạc bộ, tích luỹ nền tảng kỹ thuật vững chắc để leo lên những độ cao mới."
       },
       {
+        camp: "Thử thách khởi nghiệp",
+        title: "Co-Founder & Shipper tại Ngỗng Ăn Chay",
+        year: "05/2024 - 09/2024 (4 tháng)",
+        altitude: "750m",
+        desc: "Dự án khởi nghiệp ẩm thực chay thực tế. Trực tiếp tham gia từ khâu lên kế hoạch, quản lý vận hành, tối ưu quy trình đến phân phối và giao hàng (shipper) thực chiến."
+      },
+      {
         camp: "Trạm dừng chân 2",
         title: "Chuyển mình sang UI/UX",
         year: "2025",
