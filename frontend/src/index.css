@@ -608,6 +608,13 @@ h1, h2, h3, h4, h5, h6 {
   filter: blur(14px);
   opacity: 0.8;
 }
+.intro-avatar-orbit-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  transform: rotate(-15deg);
+  pointer-events: none;
+}
 .intro-avatar-plane {
   position: absolute;
   top: 50%;
@@ -618,10 +625,8 @@ h1, h2, h3, h4, h5, h6 {
   margin-left: -12px;
   color: var(--cyan-accent);
   filter: drop-shadow(0 0 8px var(--cyan-accent));
-  z-index: 5;
-  animation: planeOrbitAndSwoop 15s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: planeOrbit3D 7s linear infinite;
   transform-origin: center;
-  pointer-events: none;
 }
 .intro-avatar-plane svg {
   width: 100%;
@@ -636,36 +641,39 @@ h1, h2, h3, h4, h5, h6 {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-@keyframes planeOrbitAndSwoop {
+@keyframes planeOrbit3D {
   0% {
-    transform: rotate(0deg) translate(105px) rotate(75deg);
-    opacity: 1;
+    transform: translate(110px, 0px) scale(0.95) rotate(45deg);
+    z-index: 10;
+    opacity: 0.9;
   }
-  48% {
-    transform: rotate(360deg) translate(105px) rotate(75deg);
+  25% {
+    transform: translate(0px, 35px) scale(1.25) rotate(135deg);
+    z-index: 10;
     opacity: 1;
+    filter: drop-shadow(0 0 8px var(--cyan-accent));
   }
-  58% {
-    transform: translate(-130px, 130px) rotate(-135deg) scale(0.85);
+  49.9% {
+    z-index: 10;
+  }
+  50% {
+    transform: translate(-110px, 0px) scale(0.95) rotate(225deg);
+    z-index: 0;
     opacity: 0.8;
   }
-  68% {
-    transform: translate(-170px, -60px) rotate(-35deg) scale(0.7);
-    opacity: 0.6;
+  75% {
+    transform: translate(0px, -35px) scale(0.65) rotate(315deg);
+    z-index: 0;
+    opacity: 0.45;
+    filter: drop-shadow(0 0 2px var(--cyan-accent));
   }
-  78% {
-    transform: translate(170px, 60px) rotate(-35deg) scale(1.15);
-    opacity: 1;
-    color: var(--primary-color);
-    filter: drop-shadow(0 0 12px var(--primary-color));
-  }
-  88% {
-    transform: translate(100px, -100px) rotate(165deg) scale(0.8);
-    opacity: 0.7;
+  99.9% {
+    z-index: 0;
   }
   100% {
-    transform: rotate(360deg) translate(105px) rotate(75deg);
-    opacity: 1;
+    transform: translate(110px, 0px) scale(0.95) rotate(405deg);
+    z-index: 10;
+    opacity: 0.9;
   }
 }
 
