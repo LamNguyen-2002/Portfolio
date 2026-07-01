@@ -96,9 +96,16 @@ function IntroSplash({ profile, initials, onEnter }) {
       <div className="intro-splash-bg" aria-hidden="true"><span className="aurora aurora-1" /><span className="aurora aurora-2" /></div>
       <div className="intro-splash-inner">
         <div className="intro-avatar-wrap">
-          <span className="intro-avatar-ring" aria-hidden="true" />
+          <div className="intro-avatar-ring-outer" aria-hidden="true" />
+          <div className="intro-avatar-ring-inner" aria-hidden="true" />
           <div className={`intro-avatar ${profile.avatar ? 'has-image' : ''}`}>
             {profile.avatar ? <img src={profile.avatar} alt={profile.name} /> : initials}
+          </div>
+          <div className="intro-avatar-plane" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="m22 2-7 20-4-9-9-4Z" />
+              <path d="M22 2 11 13" />
+            </svg>
           </div>
           <span className="intro-wave" aria-hidden="true">👋</span>
         </div>
