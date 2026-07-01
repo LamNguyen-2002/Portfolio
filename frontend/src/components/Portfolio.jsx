@@ -175,6 +175,7 @@ export default function Portfolio({ profile, projects, onAdminClick, onOpenProje
           <a href="#about" className="nav-link">Giới thiệu</a>
           <a href="#skills" className="nav-link">Kỹ năng</a>
           <a href="#journey" className="nav-link">Hành trình</a>
+          <a href="#events" className="nav-link">Dấu ấn</a>
           <a href="#projects" className="nav-link">Dự án</a>
           <a href="#contact" className="nav-link">Liên hệ</a>
           <button onClick={onAdminClick} className="btn-secondary btn-sm">
@@ -305,7 +306,6 @@ export default function Portfolio({ profile, projects, onAdminClick, onOpenProje
         <div className="section-head" data-reveal>
           <span className="eyebrow">Hành trình</span>
           <h2 className="glow-text-purple">Kinh nghiệm &amp; Học vấn</h2>
-          <p>Quá trình làm sản phẩm thực tế — từ thiết kế hệ thống, ứng dụng AI đến chuẩn hoá quy trình Design–FE.</p>
         </div>
 
         <div className="journey-grid">
@@ -377,7 +377,6 @@ export default function Portfolio({ profile, projects, onAdminClick, onOpenProje
           <div className="section-head" data-reveal>
             <span className="eyebrow">Dấu ấn</span>
             <h2 className="glow-text">Sự kiện &amp; Hoạt động Nổi bật</h2>
-            <p>Các chương trình tiêu biểu đã trực tiếp tổ chức, điều phối hoặc cố vấn chuyên môn.</p>
           </div>
           <div className="grid-3 event-grid" style={{ gap: '20px' }}>
             {profile.events.map((evt, i) => {
@@ -450,9 +449,8 @@ export default function Portfolio({ profile, projects, onAdminClick, onOpenProje
           <>
             <section id="projects" className="container section">
               <div className="section-head" data-reveal>
-                <span className="eyebrow">Dự án nổi bật · Hệ thống nội bộ</span>
+                <span className="eyebrow">Dự án nổi bật</span>
                 <h2 className="glow-text">Sản phẩm &amp; Hệ thống đã triển khai</h2>
-                <p>Các hệ thống thực tế: CRM, ERP nội bộ SPACE và Dashboard giám sát GA4. Mỗi dự án đều có bản Web &amp; Mobile — di chuột vào từng chức năng để xem mô tả trực tiếp trên demo.</p>
               </div>
 
               <div className="project-rows">
@@ -474,9 +472,8 @@ export default function Portfolio({ profile, projects, onAdminClick, onOpenProje
             {landings.length > 0 && (
               <section id="landings" className="container section">
                 <div className="section-head" data-reveal>
-                  <span className="eyebrow">Landing Pages · Hiệu ứng cao cấp</span>
+                  <span className="eyebrow">Landing Pages</span>
                   <h2 className="glow-text-purple">Bộ sưu tập Landing Page</h2>
-                  <p>Bấm vào một landing để mở trang đầy đủ với hiệu ứng cuộn, parallax và bản Web/Mobile tương tác.</p>
                 </div>
 
                 <div className="grid-3 project-gallery">
@@ -506,7 +503,7 @@ export default function Portfolio({ profile, projects, onAdminClick, onOpenProje
           <p>Bạn có ý tưởng sản phẩm hoặc cần một người thiết kế tỉ mỉ, hiểu cả quy trình dev? Nhắn cho mình nhé!</p>
         </div>
 
-        <div className="grid-2" style={{ alignItems: 'start' }}>
+        <div className="grid-2" style={{ alignItems: 'stretch' }}>
           <div className="glass-card contact-info">
             <h3>Thông tin liên hệ</h3>
             <ContactLine icon={<Mail size={20} />} tone="var(--primary-color)" toneBg="rgba(0,255,136,0.1)" label="Email" value={profile.email} href={profile.email ? `mailto:${profile.email}` : null} />
