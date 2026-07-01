@@ -68,7 +68,7 @@ const fallbackData = {
       { name: "Retro Night 5", type: "Nội bộ - sinh nhật CLB", org: "FPTU AI Club" },
       { name: "AI FAIR", type: "Nội bộ - Tết", org: "FPTU AI Club" },
       { name: "POPAWA", type: "Nội bộ - teambuilding", org: "FPTU AI Club" },
-      { name: "Wave FaIter", type: "Nội bộ - vai trò cố vấn", org: "FPTU AI Club" },
+      { name: "𝐖𝐚𝐯𝐞 𝐅𝐀𝐈𝐭𝐞𝐫", type: "Nội bộ - vai trò cố vấn", org: "FPTU AI Club" },
       { name: "FRUITY K-NIGHT", type: "Nội bộ - vai trò cố vấn", org: "FPTU AI Club" }
     ],
     interests: ["Đi du lịch", "Nghiên cứu & tìm hiểu những điều mới"]
