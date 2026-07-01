@@ -98,14 +98,25 @@ function IntroSplash({ profile, initials, onEnter }) {
         <div className="intro-avatar-wrap">
           <div className="intro-avatar-ring-outer" aria-hidden="true" />
           <div className="intro-avatar-ring-inner" aria-hidden="true" />
+
+          {/* Dotted trail - behind part */}
+          <svg className="orbit-trail-svg-behind" viewBox="0 0 300 300" aria-hidden="true" style={{ position: 'absolute', inset: '-65px', width: '300px', height: '300px', pointerEvents: 'none', zIndex: 0 }}>
+            <path d="M 40,150 A 110,35 0 0,1 260,150" fill="none" stroke="rgba(255,255,255,0.18)" strokeWidth="1.5" strokeDasharray="5 5" transform="rotate(-15 150 150)" />
+          </svg>
+
           <div className={`intro-avatar ${profile.avatar ? 'has-image' : ''}`}>
             {profile.avatar ? <img src={profile.avatar} alt={profile.name} /> : initials}
           </div>
+
+          {/* Dotted trail - front part */}
+          <svg className="orbit-trail-svg-front" viewBox="0 0 300 300" aria-hidden="true" style={{ position: 'absolute', inset: '-65px', width: '300px', height: '300px', pointerEvents: 'none', zIndex: 6 }}>
+            <path d="M 260,150 A 110,35 0 0,1 40,150" fill="none" stroke="var(--cyan-accent)" strokeWidth="1.5" strokeDasharray="5 5" transform="rotate(-15 150 150)" style={{ filter: 'drop-shadow(0 0 4px var(--cyan-accent))' }} />
+          </svg>
+
           <div className="intro-avatar-orbit-wrap" aria-hidden="true">
             <div className="intro-avatar-plane">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="m22 2-7 20-4-9-9-4Z" />
-                <path d="M22 2 11 13" />
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H3.5c-.5 0-1 .5-1 1v.5c0 .5.5 1 1 1H6l3 2v3.5c0 .5.5 1 1 1h.5c.5 0 1-.5 1-1V20l3-2 3.2 5.3c.3.4.8.5 1.3.3l.5-.3c.4-.2.6-.6.5-1.1Z" />
               </svg>
             </div>
           </div>
