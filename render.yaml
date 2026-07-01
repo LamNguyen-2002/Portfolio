@@ -40,8 +40,11 @@ services:
     envVars:
       - key: NODE_VERSION
         value: "22"                # Vite 8 yêu cầu Node >= 20.19 hoặc 22.12
-      - key: VITE_API_BASE          # URL backend công khai (Cấu hình trên Render Dashboard)
-        sync: false
+      - key: VITE_API_BASE          # baked vào lúc build để gọi đúng backend
+        fromService:
+          type: web
+          name: portfolio-backend
+          property: host
     routes:
       - type: rewrite               # SPA fallback cho client-side routing
         source: /*

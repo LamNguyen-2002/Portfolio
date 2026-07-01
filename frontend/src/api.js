@@ -3,6 +3,10 @@
 // (e.g. Render), set VITE_API_BASE to the deployed backend URL so the static
 // frontend talks to the separate backend service directly.
 let base = (import.meta.env.VITE_API_BASE || '').trim().replace(/\/$/, '');
+// If it is a Render internal hostname (e.g. portfolio-backend-xxxx), append .onrender.com
+if (base && !base.includes('.') && !base.includes(':') && base !== 'localhost') {
+  base = `${base}.onrender.com`;
+}
 // Allow passing just a hostname (e.g. Render's fromService host) — add scheme.
 if (base && !/^https?:\/\//.test(base)) base = `https://${base}`;
 
