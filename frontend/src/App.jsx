@@ -78,49 +78,56 @@ const fallbackData = {
         title: "FPT University & AI Club",
         year: "2021",
         altitude: "100m",
-        desc: "Khởi động hành trình tại Đại học FPT chuyên ngành Kỹ thuật Phần mềm. Gia nhập FPTU AI Club, bắt đầu rèn luyện tư lưu hệ thống và kỹ năng tổ chức sự kiện đầu đời."
+        desc: "Khởi động hành trình tại Đại học FPT chuyên ngành Kỹ thuật Phần mềm. Gia nhập FPTU AI Club, bắt đầu rèn luyện tư lưu hệ thống và kỹ năng tổ chức sự kiện đầu đời.",
+        icon: "GraduationCap"
       },
       {
         camp: "Trạm dừng chân 1",
         title: "Kỹ thuật & Hệ thống",
         year: "2022 - 2024",
         altitude: "500m",
-        desc: "Mài giũa tư duy lập trình và thuật toán. Tham gia phát triển các dự án thực tế trong câu lạc bộ, tích luỹ nền tảng kỹ thuật vững chắc để leo lên những độ cao mới."
+        desc: "Mài giũa tư duy lập trình và thuật toán. Tham gia phát triển các dự án thực tế trong câu lạc bộ, tích luỹ nền tảng kỹ thuật vững chắc để leo lên những độ cao mới.",
+        icon: "Code"
       },
       {
         camp: "Thử thách khởi nghiệp",
         title: "Co-Founder & Shipper tại Ngỗng Ăn Chay",
         year: "05/2024 - 09/2024 (4 tháng)",
         altitude: "750m",
-        desc: "Dự án khởi nghiệp ẩm thực chay thực tế. Trực tiếp tham gia từ khâu lên kế hoạch, quản lý vận hành, tối ưu quy trình đến phân phối và giao hàng (shipper) thực chiến."
+        desc: "Dự án khởi nghiệp ẩm thực chay thực tế. Trực tiếp tham gia từ khâu lên kế hoạch, quản lý vận hành, tối ưu quy trình đến phân phối và giao hàng (shipper) thực chiến.",
+        icon: "Store"
       },
       {
         camp: "Trạm dừng chân 2",
         title: "Chuyển mình sang UI/UX",
         year: "2025",
         altitude: "1000m",
-        desc: "Tốt nghiệp Đại học FPT và gia nhập Học viện Minh Trí Thành. Định vị bản thân là Designer có nền tảng Kỹ thuật phần mềm — cầu nối tối ưu hoá quy trình hand-off."
+        desc: "Tốt nghiệp Đại học FPT và gia nhập Học viện Minh Trí Thành. Định vị bản thân là Designer có nền tảng Kỹ thuật phần mềm — cầu nối tối ưu hoá quy trình hand-off.",
+        icon: "Palette"
       },
       {
         camp: "Trạm dừng chân 3",
         title: "AI & Tự động hoá hệ thống",
         year: "2026 - Hiện tại",
         altitude: "2000m",
-        desc: "Trực tiếp thiết kế và phát triển các hệ thống cốt lõi: CRM, ERP SPACE, Dashboard GA4. Ứng dụng AI (Gemini, Claude) tối ưu hoá 350% hiệu suất vận hành."
+        desc: "Trực tiếp thiết kế và phát triển các hệ thống cốt lõi: CRM, ERP SPACE, Dashboard GA4. Ứng dụng AI (Gemini, Claude) tối ưu hoá 350% hiệu suất vận hành.",
+        icon: "Sparkles"
       },
       {
         camp: "Thử thách mới",
         title: "Văn bằng 2 Kỹ sư Cầu đường tại UTC",
         year: "05/2026 - Hiện tại",
         altitude: "2500m",
-        desc: "Học Văn bằng 2 ngành Kỹ sư Cầu đường tại Đại học Giao thông Vận tải. Mở rộng tư duy kỹ thuật từ không gian số ra thế giới vật lý và các công trình hạ tầng thực tế."
+        desc: "Học Văn bằng 2 ngành Kỹ sư Cầu đường tại Đại học Giao thông Vận tải. Mở rộng tư duy kỹ thuật từ không gian số ra thế giới vật lý và các công trình hạ tầng thực tế.",
+        icon: "Milestone"
       },
       {
         camp: "Đỉnh núi tiếp theo",
         title: "Tích hợp đa chiều & Kiến tạo",
         year: "Tương lai",
         altitude: "3000m",
-        desc: "Kết hợp công nghệ thông tin, tư duy thiết kế hệ thống và kỹ thuật hạ tầng vật lý để giải quyết những bài toán phức tạp quy mô lớn, liên tục khai phá những giới hạn mới của bản thân."
+        desc: "Kết hợp công nghệ thông tin, tư duy thiết kế hệ thống và kỹ thuật hạ tầng vật lý để giải quyết những bài toán phức tạp quy mô lớn, liên tục khai phá những giới hạn mới của bản thân.",
+        icon: "Rocket"
       }
     ]
   },

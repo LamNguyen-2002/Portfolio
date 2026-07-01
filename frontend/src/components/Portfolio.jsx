@@ -22,7 +22,11 @@ import {
   MousePointerClick,
   LayoutDashboard,
   Rocket,
-  ChevronDown
+  ChevronDown,
+  Code,
+  Palette,
+  Store,
+  Milestone
 } from 'lucide-react';
 import MockUI from './MockUI';
 import { getShowcase } from '../data/showcases';
@@ -137,6 +141,63 @@ function IntroSplash({ profile, initials, onEnter }) {
   );
 }
 
+const getClimbIcon = (iconName) => {
+  switch (iconName) {
+    case 'GraduationCap': return <GraduationCap size={16} />;
+    case 'Code': return <Code size={16} />;
+    case 'Store': return <Store size={16} />;
+    case 'Palette': return <Palette size={16} />;
+    case 'Sparkles': return <Sparkles size={16} />;
+    case 'Milestone': return <Milestone size={16} />;
+    case 'Rocket': return <Rocket size={16} />;
+    default: return <Award size={16} />;
+  }
+};
+
+function MouseGlow() {
+  const glowRef = useRef(null);
+
+  useEffect(() => {
+    const glow = glowRef.current;
+    if (!glow) return;
+
+    const onMouseMove = (e) => {
+      requestAnimationFrame(() => {
+        glow.style.transform = `translate(${e.clientX - 250}px, ${e.clientY - 250}px)`;
+      });
+    };
+
+    window.addEventListener('mousemove', onMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+    };
+  }, []);
+
+  return (
+    <div 
+      ref={glowRef}
+      className="mouse-glow-bg"
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '500px',
+        height: '500px',
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(0, 255, 136, 0.25) 0%, rgba(0, 255, 136, 0.06) 25%, transparent 70%)',
+        pointerEvents: 'none',
+        zIndex: 9999, // Render on top of background but below text/cursor overlay
+        transform: 'translate(-999px, -999px)',
+        willChange: 'transform',
+        filter: 'blur(30px)',
+        mixBlendMode: 'screen',
+        opacity: 0.85
+      }}
+      aria-hidden="true"
+    />
+  );
+}
+
 export default function Portfolio({ profile, projects, onAdminClick, onOpenProject }) {
   const [hoveredSkill, setHoveredSkill] = useState(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -188,6 +249,7 @@ export default function Portfolio({ profile, projects, onAdminClick, onOpenProje
 
   return (
     <div className="portfolio-root" style={{ position: 'relative', zIndex: 10 }}>
+      <MouseGlow />
       {!entered && <IntroSplash profile={profile} initials={initials} onEnter={enterSite} />}
       <ScrollProgress />
       {/* Ambient aurora blobs */}
@@ -368,18 +430,20 @@ export default function Portfolio({ profile, projects, onAdminClick, onOpenProje
                       position: 'absolute', 
                       left: '50%', 
                       transform: 'translateX(-50%)',
-                      width: '20px', 
-                      height: '20px', 
+                      width: '34px', 
+                      height: '34px', 
                       borderRadius: '50%', 
                       background: 'var(--bg-card)', 
-                      border: '3px solid ' + (i === profile.climbingSteps.length - 1 ? 'var(--primary-color)' : 'var(--secondary-color)'),
-                      boxShadow: '0 0 10px ' + (i === profile.climbingSteps.length - 1 ? 'var(--primary-color)' : 'var(--secondary-color)'),
+                      border: '2px solid ' + (i === profile.climbingSteps.length - 1 ? 'var(--primary-color)' : 'var(--secondary-color)'),
+                      boxShadow: '0 0 12px ' + (i === profile.climbingSteps.length - 1 ? 'rgba(0, 255, 136, 0.4)' : 'rgba(139, 92, 246, 0.4)'),
                       zIndex: 2,
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      color: i === profile.climbingSteps.length - 1 ? 'var(--primary-color)' : 'var(--secondary-color)',
+                      backdropFilter: 'blur(5px)'
                     }}>
-                      <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#ffffff' }} />
+                      {getClimbIcon(step.icon)}
                     </div>
 
                     {/* Card container */}
