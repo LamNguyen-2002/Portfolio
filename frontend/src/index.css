@@ -600,7 +600,7 @@ h1, h2, h3, h4, h5, h6 {
 .intro-splash-bg { position: absolute; inset: 0; pointer-events: none; }
 .intro-splash-inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; max-width: 640px; animation: introRise .9s cubic-bezier(.16,1,.3,1) both; }
 @keyframes introRise { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
-.intro-splash .intro-name { margin-bottom: 14px; }
+.intro-splash .intro-name { margin-bottom: 14px; font-size: clamp(1.8rem, 5vw, 3.6rem); white-space: nowrap; }
 .intro-splash-tag { color: var(--text-sub); font-size: 1.06rem; line-height: 1.6; max-width: 480px; }
 .intro-scroll { position: absolute; bottom: 34px; left: 50%; transform: translateX(-50%); z-index: 1; display: inline-flex; flex-direction: column; align-items: center; gap: 6px; background: none; border: none; color: var(--text-muted); font-family: var(--font-sans); font-size: .82rem; letter-spacing: .05em; cursor: pointer; animation: introBounce 1.8s ease-in-out infinite; }
 .intro-scroll:hover { color: var(--primary-color); }
