@@ -332,7 +332,6 @@ export default function Portfolio({ profile, projects, onAdminClick, onOpenProje
               <MountainIcon size={14} /> Chinh phục
             </span>
             <h2 className="glow-text">Hành trình Leo núi Cuộc đời</h2>
-            <p>Từng cột mốc học hỏi, trưởng thành và chinh phục những đỉnh cao mới qua các giai đoạn cuộc đời.</p>
           </div>
 
           <div className="climb-timeline">
@@ -349,7 +348,7 @@ export default function Portfolio({ profile, projects, onAdminClick, onOpenProje
               opacity: 0.2
             }} />
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '40px', position: 'relative' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', position: 'relative' }}>
               {profile.climbingSteps.map((step, i) => {
                 const isEven = i % 2 === 0;
                 return (
@@ -388,7 +387,7 @@ export default function Portfolio({ profile, projects, onAdminClick, onOpenProje
                       className="glass-card climb-card"
                       style={{ 
                         width: '45%', 
-                        padding: '24px', 
+                        padding: '16px 24px', 
                         border: '1px solid rgba(255, 255, 255, 0.05)',
                         background: 'rgba(255, 255, 255, 0.02)',
                         textAlign: isEven ? 'right' : 'left',
@@ -416,7 +415,7 @@ export default function Portfolio({ profile, projects, onAdminClick, onOpenProje
                       <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#ffffff', marginBottom: '4px' }}>
                         {step.title}
                       </h3>
-                      <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'block', marginBottom: '12px' }}>
+                      <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', display: 'block', marginBottom: '8px' }}>
                         {step.year}
                       </span>
                       <p style={{ fontSize: '0.9rem', color: 'var(--text-sub)', lineHeight: 1.6 }}>
@@ -436,7 +435,6 @@ export default function Portfolio({ profile, projects, onAdminClick, onOpenProje
         <div className="section-head" data-reveal>
           <span className="eyebrow">Năng lực</span>
           <h2 className="glow-text">Kỹ năng Chuyên môn</h2>
-          <p>Bộ kỹ năng được tổ chức theo nhóm như một Design System. Di chuột qua một chip để làm nổi bật các dự án có sử dụng kỹ năng đó.</p>
         </div>
 
         <div className="skill-grid">
