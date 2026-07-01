@@ -129,6 +129,36 @@ export default function Admin({ token, expiresAt, onLogout, onUpdateData }) {
     }
   };
 
+  // Skills Save
+  const handleSaveSkills = async (updatedSkillGroups) => {
+    setLoading(true);
+    try {
+      const updatedProfile = {
+        ...profile,
+        skillGroups: updatedSkillGroups
+      };
+      
+      const res = await fetch(api('/api/settings/profile'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(updatedProfile)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Lỗi cập nhật kỹ năng.');
+      
+      setProfile(data.profile);
+      showSuccess('Danh sách kỹ năng đã cập nhật thành công.');
+      onUpdateData(); // Trigger app refetch
+    } catch (err) {
+      showError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Read an image file, center-crop to a square and downscale to 320px before
   // storing as a base64 data URL in profile.avatar (kept small for db.json).
   const handleAvatarChange = (e) => {
@@ -390,6 +420,19 @@ export default function Admin({ token, expiresAt, onLogout, onUpdateData }) {
           </button>
           
           <button 
+            onClick={() => { setActiveTab('skills'); setSelectedProjectId(null); }}
+            className="btn-secondary"
+            style={{
+              justifyContent: 'flex-start',
+              border: activeTab === 'skills' ? '1px solid var(--primary-color)' : '1px solid var(--border-color)',
+              background: activeTab === 'skills' ? 'rgba(0,255,136,0.05)' : 'none',
+              color: activeTab === 'skills' ? 'var(--primary-color)' : 'var(--text-main)'
+            }}
+          >
+            <Cpu size={16} /> Quản lý kỹ năng
+          </button>
+          
+          <button 
             onClick={() => { setActiveTab('security'); setSelectedProjectId(null); }}
             className="btn-secondary"
             style={{
@@ -564,6 +607,198 @@ export default function Admin({ token, expiresAt, onLogout, onUpdateData }) {
                 <Save size={16} /> {loading ? 'Đang lưu...' : 'Lưu hồ sơ cá nhân'}
               </button>
             </form>
+          )}
+
+          {/* TAB 5: SKILLS MANAGEMENT */}
+          {activeTab === 'skills' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                <div>
+                  <h2 style={{ fontSize: '1.5rem' }} className="glow-text">Quản lý nhóm kỹ năng</h2>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                    Chỉnh sửa các nhóm kỹ năng và danh sách kỹ năng lẻ hiển thị trên trang Portfolio.
+                  </p>
+                </div>
+                <button 
+                  type="button" 
+                  onClick={() => {
+                    const currentGroups = profile.skillGroups || [];
+                    const newGroups = [...currentGroups, { label: 'Nhóm kỹ năng mới', items: [] }];
+                    setProfile({ ...profile, skillGroups: newGroups });
+                  }} 
+                  className="btn-neon" 
+                  style={{ padding: '8px 16px', fontSize: '0.9rem' }}
+                >
+                  <Plus size={16} /> Thêm nhóm mới
+                </button>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                {(profile.skillGroups || []).length === 0 ? (
+                  <p style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>Chưa có nhóm kỹ năng nào. Hãy thêm nhóm mới.</p>
+                ) : (
+                  (profile.skillGroups || []).map((group, groupIdx) => {
+                    return (
+                      <div 
+                        key={groupIdx} 
+                        className="glass-card" 
+                        style={{ 
+                          padding: '24px', 
+                          border: '1px solid rgba(255,255,255,0.05)', 
+                          background: 'rgba(255,255,255,0.01)',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '16px'
+                        }}
+                      >
+                        {/* Group Header */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flexGrow: 1 }}>
+                            <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>Tên nhóm kỹ năng</label>
+                            <input
+                              type="text"
+                              className="glass-input"
+                              value={group.label || ''}
+                              onChange={(e) => {
+                                const newGroups = [...(profile.skillGroups || [])];
+                                newGroups[groupIdx] = { ...newGroups[groupIdx], label: e.target.value };
+                                setProfile({ ...profile, skillGroups: newGroups });
+                              }}
+                              placeholder="Ví dụ: UI/UX Design, Lập trình..."
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            className="btn-secondary"
+                            style={{ 
+                              marginTop: '22px', 
+                              borderColor: 'rgba(239, 68, 68, 0.3)', 
+                              color: '#f87171',
+                              padding: '10px'
+                            }}
+                            onClick={() => {
+                              const newGroups = (profile.skillGroups || []).filter((_, i) => i !== groupIdx);
+                              setProfile({ ...profile, skillGroups: newGroups });
+                            }}
+                            title="Xóa nhóm kỹ năng này"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+
+                        {/* Skills Items (Pills Layout) */}
+                        <div>
+                          <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: '8px' }}>
+                            Danh sách kỹ năng
+                          </label>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                            {(group.items || []).length === 0 ? (
+                              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>Chưa có kỹ năng nào trong nhóm này.</span>
+                            ) : (
+                              (group.items || []).map((item, itemIdx) => (
+                                <div 
+                                  key={itemIdx}
+                                  style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    background: 'rgba(139, 92, 246, 0.1)',
+                                    border: '1px solid rgba(139, 92, 246, 0.2)',
+                                    color: 'var(--secondary-color)',
+                                    padding: '6px 12px',
+                                    borderRadius: '20px',
+                                    fontSize: '0.85rem',
+                                    fontWeight: 500
+                                  }}
+                                >
+                                  <span>{item}</span>
+                                  <button
+                                    type="button"
+                                    style={{
+                                      background: 'none',
+                                      border: 'none',
+                                      color: 'var(--text-muted)',
+                                      cursor: 'pointer',
+                                      padding: 0,
+                                      display: 'flex',
+                                      alignItems: 'center'
+                                    }}
+                                    onClick={() => {
+                                      const newGroups = [...(profile.skillGroups || [])];
+                                      const newItems = (newGroups[groupIdx].items || []).filter((_, i) => i !== itemIdx);
+                                      newGroups[groupIdx] = { ...newGroups[groupIdx], items: newItems };
+                                      setProfile({ ...profile, skillGroups: newGroups });
+                                    }}
+                                  >
+                                    <Trash2 size={12} style={{ color: '#f87171' }} />
+                                  </button>
+                                </div>
+                              ))
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Add Skill Item Input */}
+                        <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flexGrow: 1 }}>
+                            <input
+                              type="text"
+                              id={`new-skill-input-${groupIdx}`}
+                              className="glass-input"
+                              placeholder="Thêm kỹ năng mới (Ví dụ: Figma, Git, Claude...)"
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault();
+                                  const val = e.target.value.trim();
+                                  if (!val) return;
+                                  const newGroups = [...(profile.skillGroups || [])];
+                                  const currentItems = newGroups[groupIdx].items || [];
+                                  if (!currentItems.includes(val)) {
+                                    newGroups[groupIdx] = { ...newGroups[groupIdx], items: [...currentItems, val] };
+                                    setProfile({ ...profile, skillGroups: newGroups });
+                                  }
+                                  e.target.value = '';
+                                }
+                              }}
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            className="btn-secondary"
+                            onClick={() => {
+                              const input = document.getElementById(`new-skill-input-${groupIdx}`);
+                              const val = input ? input.value.trim() : '';
+                              if (!val) return;
+                              const newGroups = [...(profile.skillGroups || [])];
+                              const currentItems = newGroups[groupIdx].items || [];
+                              if (!currentItems.includes(val)) {
+                                newGroups[groupIdx] = { ...newGroups[groupIdx], items: [...currentItems, val] };
+                                setProfile({ ...profile, skillGroups: newGroups });
+                              }
+                              if (input) input.value = '';
+                            }}
+                            style={{ padding: '12px 16px' }}
+                          >
+                            Thêm
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+
+              <div style={{ marginTop: '10px' }}>
+                <button
+                  type="button"
+                  className="btn-neon"
+                  onClick={() => handleSaveSkills(profile.skillGroups || [])}
+                  disabled={loading}
+                >
+                  <Save size={16} /> {loading ? 'Đang lưu...' : 'Lưu thay đổi kỹ năng'}
+                </button>
+              </div>
+            </div>
           )}
 
           {/* TAB 2: PROJECTS MANAGEMENT */}
