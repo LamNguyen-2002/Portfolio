@@ -3,6 +3,9 @@ import BackgroundEffect from './components/BackgroundEffect';
 import Portfolio from './components/Portfolio';
 import Login from './components/Login';
 import Admin from './components/Admin';
+import ProjectDetail from './components/ProjectDetail';
+import LandingPage from './components/LandingPage';
+import { getShowcase } from './data/showcases';
 import { api } from './api';
 
 // Default static fallback data — mirrors server/db.json (Nguyễn Tùng Lâm's real CV)
@@ -10,7 +13,7 @@ const fallbackData = {
   profile: {
     name: "Nguyễn Tùng Lâm",
     title: "UI/UX Designer · hướng tới Product Designer",
-    bio: "Mình áp dụng tư duy thiết kế lấy người dùng làm trung tâm cùng kỹ năng triển khai UI chi tiết (Interactive Components, cấu trúc Layout) để kiến tạo những sản phẩm số dễ dùng và thẩm mỹ. Trọng tâm của mình là không ngừng trau dồi quy trình làm sản phẩm thực tế và hướng tới vị trí Product Designer trong 3 năm tới.",
+    bio: "Mình là người thích biến những bài toán phức tạp thành trải nghiệm số gọn gàng, dễ dùng và có gu thẩm mỹ. Mình lấy người dùng làm trung tâm, tư duy theo hệ thống và tận dụng AI để đưa ý tưởng thành sản phẩm thật. Rất vui được gặp bạn ở đây — cùng dạo qua hành trình và các dự án của mình nhé!",
     email: "ntlam2211@gmail.com",
     phone: "0974 149 916",
     location: "Bồ Đề, Hà Nội",
@@ -61,21 +64,21 @@ const fallbackData = {
   projects: [
     {
       id: "project-1",
-      title: "AI-driven Analytics & Campaign Optimization Dashboard",
-      subtitle: "Hệ thống Phân tích Dữ liệu & Tối ưu Chiến dịch Quảng cáo",
+      title: "MTT Monitor — GA4 & Ads Tracking Dashboard",
+      subtitle: "Hệ thống giám sát dữ liệu real-time (GA4 · Facebook Ads · Google Ads)",
       role: "End-to-End Product Designer / Solo Developer",
       period: "07/2025 - Hiện tại",
-      tech: ["Figma", "GTM", "GA4", "BigQuery", "Meta Ads API", "YouTube Ads API", "Gemini", "Claude"],
+      tech: ["GA4", "BigQuery", "Google Gemini", "Facebook Ads API", "Google Ads API", "Node.js", "Express", "SQLite", "Vite", "Nginx + PM2"],
       metrics: {
-        efficiency: "+40% Conversion Rate",
-        loadTime: "-1.2s Page Load",
-        roi: "+25% Marketing ROI"
+        efficiency: "3-in-1 GA4 + FB + Google Ads",
+        loadTime: "Realtime qua BigQuery",
+        roi: "AI Gemini tự phân tích"
       },
       details: [
-        "UI/UX & Development: Thiết kế luồng trải nghiệm, giao diện trực quan và lập trình toàn trình (end-to-end) cho hệ thống Dashboard.",
-        "Data Pipeline: Cấu hình tracking hành vi người dùng trên Landing Page qua GTM/GA4 và tự động hóa luồng lưu trữ dữ liệu trên BigQuery.",
-        "API Integration: Tích hợp API trích xuất số liệu thực tế từ các chiến dịch Meta Ads và YouTube Ads.",
-        "AI Optimization: Ứng dụng AI phân tích phễu chuyển đổi, đánh giá hiệu quả quảng cáo và tự động đề xuất chiến lược tối ưu (UI/UX, nội dung, target)."
+        "Bảng điều khiển hợp nhất: gộp dữ liệu GA4 (qua BigQuery), Facebook Ads và Google/YouTube Ads về một giao diện Glassmorphism.",
+        "AI Insight: tích hợp Google Gemini tự động đọc biểu đồ và viết nhận định hiệu quả cho từng landing (Sự kiện, Phụ nữ, Minh Trí Thành).",
+        "RBAC động: quản trị tài khoản, vai trò và endpoint; phân quyền nhận báo cáo email theo từng site.",
+        "Tự động hoá: Cronjob gửi báo cáo định kỳ 10h sáng và cảnh báo khẩn khi chi phí Ads / click bất thường."
       ],
       links: { live: "", github: "", figma: "" }
     },
@@ -117,6 +120,96 @@ const fallbackData = {
         "AI Design Automation: Xây dựng bộ Design Rules / Prompt Guidelines chuyên biệt để ứng dụng AI tạo ra bản thiết kế chuẩn xác, bám sát nghiêm ngặt tài liệu đặc tả yêu cầu phần mềm (SRS)."
       ],
       links: { live: "", github: "", figma: "" }
+    },
+    {
+      id: "landing-academy",
+      title: "MTT Academy — Landing tuyển sinh khoá học",
+      subtitle: "Landing page chuyển đổi cao cho khoá Product Designer",
+      role: "UI/UX Designer & Developer",
+      period: "2026",
+      tech: ["Figma", "React", "GSAP", "Responsive", "A/B Test", "SEO"],
+      metrics: { efficiency: "+40% Đăng ký", loadTime: "-1.1s LCP", roi: "9,8% Conversion" },
+      details: [
+        "Thiết kế & dựng landing tuyển sinh với hero động, lộ trình học và social proof.",
+        "Tối ưu chuyển đổi: CTA rõ ràng, form học thử, bảng giá ưu đãi khan hiếm.",
+        "Hiệu ứng cuộn, parallax và bản mobile tối ưu tốc độ tải."
+      ],
+      links: { live: "", github: "", figma: "" }
+    },
+    {
+      id: "landing-event",
+      title: "TechSummit 2026 — Landing sự kiện",
+      subtitle: "Landing bán vé sự kiện công nghệ với lịch trình & countdown",
+      role: "UI/UX Designer & Developer",
+      period: "2026",
+      tech: ["Figma", "React", "Framer Motion", "Responsive", "Ticket Flow"],
+      metrics: { efficiency: "2.000+ vé bán", loadTime: "Countdown realtime", roi: "+60% Early Bird" },
+      details: [
+        "Landing sự kiện với hero countdown, danh sách diễn giả và lịch trình theo giờ.",
+        "Luồng đăng ký/mua vé Early Bird tối ưu chuyển đổi.",
+        "Hiệu ứng chuyển cảnh mượt, bản mobile giữ nguyên trải nghiệm."
+      ],
+      links: { live: "", github: "", figma: "" }
+    },
+    {
+      id: "landing-saas",
+      title: "FlowSpace — Landing sản phẩm SaaS",
+      subtitle: "Landing giới thiệu SaaS quản lý công việc nhóm",
+      role: "UI/UX Designer & Developer",
+      period: "2026",
+      tech: ["Figma", "React", "Space Grotesk", "Pricing", "Onboarding"],
+      metrics: { efficiency: "3x Năng suất", loadTime: "99.9% Uptime", roi: "12k+ đội nhóm" },
+      details: [
+        "Landing sản phẩm với các khối tính năng, tích hợp và bảng giá freemium.",
+        "Nhấn mạnh tự động hoá AI và onboarding chỉ trong 1 phút.",
+        "Thiết kế hiện đại, hiệu ứng nổi khối sản phẩm và bản mobile gọn gàng."
+      ],
+      links: { live: "", github: "", figma: "" }
+    },
+    {
+      id: "landing-fnb",
+      title: "Mộc — Landing Nhà hàng Việt",
+      subtitle: "Landing F&B: thực đơn, không gian & đặt bàn",
+      role: "UI/UX Designer & Developer",
+      period: "2026",
+      tech: ["Figma", "React", "Playfair Display", "Đặt bàn Online", "Responsive", "SEO Local"],
+      metrics: { efficiency: "+35% Đặt bàn", loadTime: "Menu động", roi: "4.9★ Google" },
+      details: [
+        "Landing nhà hàng tông kem ấm, chữ serif sang trọng, hero giới thiệu không gian.",
+        "Thực đơn đặc trưng dạng menu leader-dots với giá & nhãn món.",
+        "Khối đặt bàn kèm giờ mở cửa, địa chỉ và bản mobile tối ưu."
+      ],
+      links: { live: "", github: "", figma: "" }
+    },
+    {
+      id: "landing-shop",
+      title: "LUXE — Landing Thời trang / TMĐT",
+      subtitle: "Landing bộ sưu tập thời trang, lookbook & giỏ hàng",
+      role: "UI/UX Designer & Developer",
+      period: "2026",
+      tech: ["Figma", "React", "Space Grotesk", "Product Grid", "Cart", "A/B Test"],
+      metrics: { efficiency: "+28% Add-to-cart", loadTime: "Freeship 0đ", roi: "4.8★" },
+      details: [
+        "Landing editorial trắng–đen hiện đại, hero chữ lớn dẫn dắt bộ sưu tập.",
+        "Lưới sản phẩm với giá, nhãn Sale/New và banner flash sale.",
+        "Các cam kết mua sắm (freeship, đổi trả) và bản mobile 2 cột."
+      ],
+      links: { live: "", github: "", figma: "" }
+    },
+    {
+      id: "landing-spa",
+      title: "Lụa Spa — Landing Spa & Làm đẹp",
+      subtitle: "Landing spa: dịch vụ, liệu trình & đặt lịch",
+      role: "UI/UX Designer & Developer",
+      period: "2026",
+      tech: ["Figma", "React", "Cormorant", "Booking", "Responsive"],
+      metrics: { efficiency: "+42% Đặt lịch", loadTime: "Liệu trình rõ", roi: "4.9★" },
+      details: [
+        "Landing spa tông pastel mềm mại, chữ serif thanh lịch, cảm giác an yên.",
+        "Danh sách dịch vụ kèm thời lượng & giá, gói liệu trình nổi bật.",
+        "Khối đặt lịch hẹn và bản mobile giữ trọn trải nghiệm."
+      ],
+      links: { live: "", github: "", figma: "" }
     }
   ]
 };
@@ -128,6 +221,7 @@ export default function App() {
   
   const [profile, setProfile] = useState(fallbackData.profile);
   const [projects, setProjects] = useState(fallbackData.projects);
+  const [activeProject, setActiveProject] = useState(null); // opened project (detail/landing)
 
   // Read data from settings on mount or refresh
   const loadPortfolioData = async () => {
@@ -155,6 +249,13 @@ export default function App() {
       } else {
         setView('login');
       }
+    } else {
+      // Deep-link to a project/landing via ?p=<id> (shareable URL)
+      const pid = new URLSearchParams(window.location.search).get('p');
+      if (pid && getShowcase(pid)) {
+        const proj = fallbackData.projects.find((p) => p.id === pid);
+        if (proj) { setActiveProject(proj); setView('project'); }
+      }
     }
 
     // Handle back/forward buttons
@@ -163,9 +264,15 @@ export default function App() {
       if (p === '/portal-admin') {
         const isTokenValid = token && expiresAt > Date.now();
         setView(isTokenValid ? 'admin' : 'login');
-      } else {
-        setView('portfolio');
+        return;
       }
+      const pid = new URLSearchParams(window.location.search).get('p');
+      if (pid && getShowcase(pid)) {
+        const proj = fallbackData.projects.find((x) => x.id === pid);
+        if (proj) { setActiveProject(proj); setView('project'); return; }
+      }
+      setActiveProject(null);
+      setView('portfolio');
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
@@ -200,17 +307,40 @@ export default function App() {
     window.history.pushState({}, '', '/');
   };
 
+  const openProject = (project) => {
+    if (!getShowcase(project.id)) return; // only projects with a showcase are openable
+    setActiveProject(project);
+    setView('project');
+    window.scrollTo(0, 0);
+    window.history.pushState({}, '', `?p=${project.id}`);
+  };
+
+  const closeProject = () => {
+    setActiveProject(null);
+    setView('portfolio');
+    window.history.pushState({}, '', '/');
+  };
+
   return (
     <>
       <BackgroundEffect />
       
       {view === 'portfolio' && (
-        <Portfolio 
-          profile={profile} 
-          projects={projects} 
-          onAdminClick={navigateToAdminConsole} 
+        <Portfolio
+          profile={profile}
+          projects={projects}
+          onAdminClick={navigateToAdminConsole}
+          onOpenProject={openProject}
         />
       )}
+
+      {view === 'project' && activeProject && (() => {
+        const showcase = getShowcase(activeProject.id);
+        if (!showcase) { closeProject(); return null; }
+        return showcase.type === 'landing'
+          ? <LandingPage project={activeProject} showcase={showcase} onBack={closeProject} />
+          : <ProjectDetail project={activeProject} showcase={showcase} onBack={closeProject} />;
+      })()}
 
       {view === 'login' && (
         <Login 

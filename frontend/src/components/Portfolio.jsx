@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import {
   ExternalLink,
   TrendingUp,
@@ -15,8 +15,18 @@ import {
   GraduationCap,
   Users,
   Heart,
-  Compass
+  Compass,
+  ArrowRight,
+  Monitor,
+  Smartphone,
+  MousePointerClick,
+  LayoutDashboard,
+  Rocket,
+  ChevronDown
 } from 'lucide-react';
+import MockUI from './MockUI';
+import { getShowcase } from '../data/showcases';
+import useReveal from '../hooks/useReveal';
 
 // Custom brand icon — Lucide removed brand glyphs after v0.400+
 const Facebook = ({ size = 24, ...props }) => (
@@ -25,10 +35,96 @@ const Facebook = ({ size = 24, ...props }) => (
   </svg>
 );
 
-export default function Portfolio({ profile, projects, onAdminClick }) {
+// Module-scoped so it survives in-app navigation (back from a project) but
+// resets on a full page reload (F5) — the intro only reappears when refreshed.
+let introSeen = false;
+
+/* Full-screen intro gate: avatar + greeting shown on entry. Scroll / click /
+   arrow key slides it up to reveal the page; it won't return until an F5. */
+function IntroSplash({ profile, initials, onEnter }) {
+  const [leaving, setLeaving] = useState(false);
+  const done = useRef(false);
+  const enter = useRef(() => {});
+  enter.current = () => {
+    if (done.current) return;
+    done.current = true;
+    setLeaving(true);
+    window.setTimeout(() => {
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      window.scrollTo(0, 0);
+      onEnter();
+      // Absorb any trackpad momentum so the page settles at the very top.
+      let f = 0;
+      const pin = () => { window.scrollTo(0, 0); if (f++ < 12) requestAnimationFrame(pin); };
+      requestAnimationFrame(pin);
+    }, 720);
+  };
+
+  useEffect(() => {
+    const html = document.documentElement;
+    if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual';
+    // Lock BOTH html and body — the window scroller is usually the document
+    // element, so locking body alone lets the page scroll behind the gate.
+    html.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    window.scrollTo(0, 0);
+    const go = () => enter.current();
+    const onWheel = (e) => { e.preventDefault(); if (e.deltaY > 4) go(); };
+    const onTouch = (e) => { e.preventDefault(); go(); };
+    const onKey = (e) => { if (['ArrowDown', 'PageDown', ' ', 'Enter'].includes(e.key)) go(); };
+    window.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('touchmove', onTouch, { passive: false });
+    window.addEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('wheel', onWheel);
+      window.removeEventListener('touchmove', onTouch);
+      window.removeEventListener('keydown', onKey);
+      html.style.overflow = '';
+      document.body.style.overflow = '';
+    };
+  }, []);
+
+  return (
+    <div className={`intro-splash ${leaving ? 'is-leaving' : ''}`} onClick={() => enter.current()} role="button" tabIndex={0} aria-label="Vào trang">
+      <div className="intro-splash-bg" aria-hidden="true"><span className="aurora aurora-1" /><span className="aurora aurora-2" /></div>
+      <div className="intro-splash-inner">
+        <div className="intro-avatar-wrap">
+          <span className="intro-avatar-ring" aria-hidden="true" />
+          <div className={`intro-avatar ${profile.avatar ? 'has-image' : ''}`}>
+            {profile.avatar ? <img src={profile.avatar} alt={profile.name} /> : initials}
+          </div>
+          <span className="intro-wave" aria-hidden="true">👋</span>
+        </div>
+        <div className="hero-eyebrow intro-hello"><span className="status-dot" /> Xin chào, rất vui được gặp bạn!</div>
+        <h1 className="glow-text hero-title intro-name">Mình là {profile.name}</h1>
+        <p className="intro-splash-tag">Cùng khám phá đôi lời giới thiệu &amp; các dự án của mình nhé.</p>
+      </div>
+      <button className="intro-scroll" onClick={(e) => { e.stopPropagation(); enter.current(); }} aria-label="Cuộn xuống để vào">
+        <span>Cuộn xuống để vào</span>
+        <ChevronDown size={22} />
+      </button>
+    </div>
+  );
+}
+
+export default function Portfolio({ profile, projects, onAdminClick, onOpenProject }) {
   const [hoveredSkill, setHoveredSkill] = useState(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
+  const [entered, setEntered] = useState(introSeen);
+  const enterSite = () => { introSeen = true; setEntered(true); };
+
+  // Premium motion: reveal-on-scroll across all sections.
+  useReveal([projects.length]);
+
+  // Tech ticker content — de-duped tools from CV skills + project stacks.
+  const techTicker = useMemo(() => {
+    const set = new Set();
+    (profile.skillGroups || []).forEach((g) => (g.items || []).forEach((s) => set.add(s)));
+    projects.forEach((p) => (p.tech || []).forEach((t) => set.add(t)));
+    return Array.from(set);
+  }, [profile.skillGroups, projects]);
 
   // Monogram initials from the profile name (last two words → e.g. "Tùng Lâm" → "TL")
   const initials = useMemo(() => {
@@ -63,6 +159,8 @@ export default function Portfolio({ profile, projects, onAdminClick }) {
 
   return (
     <div className="portfolio-root" style={{ position: 'relative', zIndex: 10 }}>
+      {!entered && <IntroSplash profile={profile} initials={initials} onEnter={enterSite} />}
+      <ScrollProgress />
       {/* Ambient aurora blobs */}
       <div className="aurora aurora-1" aria-hidden="true" />
       <div className="aurora aurora-2" aria-hidden="true" />
@@ -70,8 +168,8 @@ export default function Portfolio({ profile, projects, onAdminClick }) {
       {/* HEADER NAVBAR */}
       <header className="navbar glass-card">
         <div className="logo">
-          <span className="logo-mark">{initials}</span>
-          <span>{profile.name?.split(' ').pop()}</span>
+          <img src="/logo.png" alt="Logo" style={{ width: '34px', height: '34px', objectFit: 'cover', borderRadius: '50%', filter: 'drop-shadow(0 0 8px rgba(0, 255, 136, 0.45))' }} />
+          <span>Tùng Lâm Nguyễn</span>
         </div>
         <nav className="nav-links">
           <a href="#about" className="nav-link">Giới thiệu</a>
@@ -86,7 +184,7 @@ export default function Portfolio({ profile, projects, onAdminClick }) {
         </nav>
       </header>
 
-      {/* HERO SECTION */}
+      {/* ABOUT — original two-column hero (job title removed) */}
       <section id="about" className="container hero">
         <div className="hero-left">
           <div className="hero-eyebrow">
@@ -94,7 +192,6 @@ export default function Portfolio({ profile, projects, onAdminClick }) {
           </div>
 
           <h1 className="glow-text hero-title">{profile.name}</h1>
-          <h2 className="glow-text-purple hero-subtitle">{profile.title}</h2>
 
           <p className="hero-bio">{profile.bio}</p>
 
@@ -116,7 +213,7 @@ export default function Portfolio({ profile, projects, onAdminClick }) {
           </div>
         </div>
 
-        {/* Profile quick-card — fills horizontal space, removes the empty gap */}
+        {/* Profile quick-card */}
         <aside className="hero-card glass-card">
           <div className="avatar-wrap">
             <div className="avatar-glow" />
@@ -133,11 +230,11 @@ export default function Portfolio({ profile, projects, onAdminClick }) {
 
           <div className="hero-stats">
             <div className="hero-stat">
-              <span className="hero-stat-num">{projects.length}</span>
+              <span className="hero-stat-num"><CountUp value={projects.length} suffix="+" /></span>
               <span className="hero-stat-label">Dự án sản phẩm</span>
             </div>
             <div className="hero-stat">
-              <span className="hero-stat-num">{skillGroups.length}</span>
+              <span className="hero-stat-num"><CountUp value={skillGroups.length} /></span>
               <span className="hero-stat-label">Nhóm kỹ năng</span>
             </div>
             <div className="hero-stat">
@@ -163,9 +260,20 @@ export default function Portfolio({ profile, projects, onAdminClick }) {
         </aside>
       </section>
 
+      {/* TECH MARQUEE — infinite ticker of tools & stacks */}
+      {techTicker.length > 0 && (
+        <div className="marquee" aria-hidden="true">
+          <div className="marquee-track">
+            {[...techTicker, ...techTicker].map((t, i) => (
+              <span key={i} className="marquee-item"><span className="marquee-dot" />{t}</span>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* SKILLS SECTION */}
       <section id="skills" className="container section">
-        <div className="section-head">
+        <div className="section-head" data-reveal>
           <span className="eyebrow">Năng lực</span>
           <h2 className="glow-text">Kỹ năng Chuyên môn</h2>
           <p>Bộ kỹ năng được tổ chức theo nhóm như một Design System. Di chuột qua một chip để làm nổi bật các dự án có sử dụng kỹ năng đó.</p>
@@ -194,7 +302,7 @@ export default function Portfolio({ profile, projects, onAdminClick }) {
 
       {/* JOURNEY: EXPERIENCE / ACTIVITIES / EDUCATION */}
       <section id="journey" className="container section">
-        <div className="section-head">
+        <div className="section-head" data-reveal>
           <span className="eyebrow">Hành trình</span>
           <h2 className="glow-text-purple">Kinh nghiệm &amp; Học vấn</h2>
           <p>Quá trình làm sản phẩm thực tế — từ thiết kế hệ thống, ứng dụng AI đến chuẩn hoá quy trình Design–FE.</p>
@@ -264,90 +372,66 @@ export default function Portfolio({ profile, projects, onAdminClick }) {
       </section>
 
       {/* PROJECTS SHOWCASE */}
-      <section id="projects" className="container section">
-        <div className="section-head">
-          <span className="eyebrow">Sản phẩm</span>
-          <h2 className="glow-text">Các Dự Án Đã Triển Khai</h2>
-          <p>Hệ thống sản phẩm từ nghiên cứu, thiết kế UX/UI cho đến lập trình hoàn thiện và tích hợp AI.</p>
-        </div>
+      {(() => {
+        const enriched = projects.map((p) => ({ project: p, showcase: getShowcase(p.id) }));
+        const systems = enriched.filter((e) => !e.showcase || e.showcase.type === 'system');
+        const landings = enriched.filter((e) => e.showcase && e.showcase.type === 'landing');
 
-        <div className="grid-2">
-          {projects.map((project) => {
-            const isHighlighted = hoveredSkill ? project.tech.includes(hoveredSkill) : false;
-            const dimmed = hoveredSkill !== null && !isHighlighted;
-            const hasLinks = project.links && Object.values(project.links).some(Boolean);
-
-            return (
-              <div
-                key={project.id}
-                className={`glass-card project-card ${isHighlighted ? 'is-highlighted' : ''} ${dimmed ? 'is-dimmed' : ''}`}
-              >
-                <div className="spotlight" />
-
-                <div>
-                  <div className="project-head">
-                    <h3>{project.title}</h3>
-                    <div className="badge purple project-role">{project.role}</div>
-                  </div>
-                  <p className="project-subtitle">{project.subtitle}</p>
-                  {project.period && <p className="project-period">{project.period}</p>}
-                </div>
-
-                {/* Performance metrics */}
-                {project.metrics && Object.keys(project.metrics).length > 0 && (
-                  <div className="metrics-grid">
-                    {project.metrics.efficiency && <Metric icon={<TrendingUp size={16} />} color="var(--primary-color)" text={project.metrics.efficiency} />}
-                    {project.metrics.loadTime && <Metric icon={<Clock size={16} />} color="var(--cyan-accent)" text={project.metrics.loadTime} />}
-                    {project.metrics.roi && <Metric icon={<Zap size={16} />} color="var(--secondary-color)" text={project.metrics.roi} />}
-                    {project.metrics.leads && <Metric icon={<TrendingUp size={16} />} color="var(--primary-color)" text={project.metrics.leads} />}
-                    {project.metrics.response && <Metric icon={<Clock size={16} />} color="var(--cyan-accent)" text={project.metrics.response} />}
-                    {project.metrics.conversion && <Metric icon={<Zap size={16} />} color="var(--secondary-color)" text={project.metrics.conversion} />}
-                    {project.metrics.handoff && <Metric icon={<TrendingUp size={16} />} color="var(--primary-color)" text={project.metrics.handoff} />}
-                    {project.metrics.consistency && <Metric icon={<CheckCircle2 size={16} />} color="var(--cyan-accent)" text={project.metrics.consistency} />}
-                    {project.metrics.adoption && <Metric icon={<Zap size={16} />} color="var(--secondary-color)" text={project.metrics.adoption} />}
-                  </div>
-                )}
-
-                {/* Details */}
-                <div className="project-details">
-                  {project.details.map((detail, idx) => (
-                    <div key={idx} className="detail-row">
-                      <CheckCircle2 size={16} className="detail-icon" />
-                      <span>{detail}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Tech tags */}
-                <div className="tech-row">
-                  {project.tech.map((t) => (
-                    <span key={t} className={`badge ${hoveredSkill === t ? 'primary' : ''}`} style={{ fontSize: '0.78rem', padding: '4px 10px' }}>{t}</span>
-                  ))}
-                </div>
-
-                {/* Action links (only when present) */}
-                {hasLinks && (
-                  <div className="project-links">
-                    {project.links.live && (
-                      <a href={project.links.live} target="_blank" rel="noreferrer" className="btn-neon btn-sm">Live Demo <ExternalLink size={14} /></a>
-                    )}
-                    {project.links.github && (
-                      <a href={project.links.github} target="_blank" rel="noreferrer" className="btn-secondary btn-sm">GitHub <ExternalLink size={14} /></a>
-                    )}
-                    {project.links.figma && (
-                      <a href={project.links.figma} target="_blank" rel="noreferrer" className="btn-secondary btn-sm">Figma <ExternalLink size={14} /></a>
-                    )}
-                  </div>
-                )}
+        return (
+          <>
+            <section id="projects" className="container section">
+              <div className="section-head" data-reveal>
+                <span className="eyebrow">Dự án nổi bật · Hệ thống nội bộ</span>
+                <h2 className="glow-text">Sản phẩm &amp; Hệ thống đã triển khai</h2>
+                <p>Các hệ thống thực tế: CRM, ERP nội bộ SPACE và Dashboard giám sát GA4. Mỗi dự án đều có bản Web &amp; Mobile — di chuột vào từng chức năng để xem mô tả trực tiếp trên demo.</p>
               </div>
-            );
-          })}
-        </div>
-      </section>
+
+              <div className="project-rows">
+                {systems.map(({ project, showcase }, i) => (
+                  <ProjectCard
+                    key={project.id}
+                    project={project}
+                    showcase={showcase}
+                    hoveredSkill={hoveredSkill}
+                    onOpen={onOpenProject}
+                    index={i}
+                    layout="row"
+                    reverse={i % 2 === 1}
+                  />
+                ))}
+              </div>
+            </section>
+
+            {landings.length > 0 && (
+              <section id="landings" className="container section">
+                <div className="section-head" data-reveal>
+                  <span className="eyebrow">Landing Pages · Hiệu ứng cao cấp</span>
+                  <h2 className="glow-text-purple">Bộ sưu tập Landing Page</h2>
+                  <p>Bấm vào một landing để mở trang đầy đủ với hiệu ứng cuộn, parallax và bản Web/Mobile tương tác.</p>
+                </div>
+
+                <div className="grid-3 project-gallery">
+                  {landings.map(({ project, showcase }, i) => (
+                    <ProjectCard
+                      key={project.id}
+                      project={project}
+                      showcase={showcase}
+                      hoveredSkill={hoveredSkill}
+                      onOpen={onOpenProject}
+                      index={i}
+                      layout="tile"
+                    />
+                  ))}
+                </div>
+              </section>
+            )}
+          </>
+        );
+      })()}
 
       {/* CONTACT */}
       <section id="contact" className="container section">
-        <div className="section-head">
+        <div className="section-head" data-reveal>
           <span className="eyebrow">Liên hệ</span>
           <h2 className="glow-text">Kết Nối Với Mình</h2>
           <p>Bạn có ý tưởng sản phẩm hoặc cần một người thiết kế tỉ mỉ, hiểu cả quy trình dev? Nhắn cho mình nhé!</p>
@@ -407,6 +491,202 @@ export default function Portfolio({ profile, projects, onAdminClick }) {
       </footer>
     </div>
   );
+}
+
+/* ---- Rich, interactive project card with web+mobile preview ---- */
+
+function ProjectCard({ project, showcase, hoveredSkill, onOpen, index = 0, layout = 'tile', reverse = false }) {
+  const [active, setActive] = useState(null);
+  const previewRef = useRef(null);
+
+  // Subtle 3D tilt on the device preview (transform-only → no layout shift).
+  const handleTilt = (e) => {
+    const el = previewRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    el.style.setProperty('--rx', `${(-py * 5).toFixed(2)}deg`);
+    el.style.setProperty('--ry', `${(px * 7).toFixed(2)}deg`);
+  };
+  const resetTilt = () => {
+    const el = previewRef.current;
+    if (el) { el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); }
+  };
+  const isHighlighted = hoveredSkill ? (project.tech || []).includes(hoveredSkill) : false;
+  const dimmed = hoveredSkill !== null && !isHighlighted;
+  const accent = showcase?.accent || '#00ff88';
+  const isLanding = showcase?.type === 'landing';
+  const features = showcase?.features || [];
+  const activeFeature = features.find((f) => f.zone === active);
+  const metrics = project.metrics ? Object.values(project.metrics).filter(Boolean) : [];
+
+  // No showcase (e.g. a project added later via Admin) → simple fallback card.
+  if (!showcase) {
+    return (
+      <div className={`glass-card project-card ${isHighlighted ? 'is-highlighted' : ''} ${dimmed ? 'is-dimmed' : ''}`}>
+        <div className="spotlight" />
+        <div className="project-head"><h3>{project.title}</h3><div className="badge purple project-role">{project.role}</div></div>
+        <p className="project-subtitle">{project.subtitle}</p>
+        <div className="project-details">
+          {(project.details || []).map((d, i) => (
+            <div key={i} className="detail-row"><CheckCircle2 size={16} className="detail-icon" /><span>{d}</span></div>
+          ))}
+        </div>
+        <div className="tech-row">{(project.tech || []).map((t) => <span key={t} className="badge" style={{ fontSize: '0.78rem', padding: '4px 10px' }}>{t}</span>)}</div>
+      </div>
+    );
+  }
+
+  const preview = (
+    <div className="pc-preview" ref={previewRef} onClick={() => onOpen?.(project)} onMouseMove={handleTilt} onMouseLeave={resetTilt}>
+      <div className="pc-browser">
+        <div className="pc-browser-bar"><span className="pc-dots"><i /><i /><i /></span></div>
+        <div className="pc-viewport">
+          <div className="pc-scaler">
+            <MockUI kind={showcase.web.kind} variant="web" accent={accent} active={active} onZone={setActive} theme={showcase.theme} brand={showcase.landing?.brand} />
+          </div>
+        </div>
+      </div>
+      <div className="pc-phone" aria-hidden="true">
+        <div className="pc-phone-inner">
+          <div className="pc-phone-scaler"><MockUI kind={showcase.mobile.kind} variant="mobile" accent={accent} theme={showcase.theme} brand={showcase.landing?.brand} /></div>
+        </div>
+      </div>
+      <span className="pc-type" style={{ borderColor: accent, color: accent }}>
+        {isLanding ? <Rocket size={12} /> : <LayoutDashboard size={12} />} {showcase.label}
+      </span>
+      <span className="pc-devices"><Monitor size={13} /><Smartphone size={13} /></span>
+      <span className="pc-open" style={{ background: accent }}>{isLanding ? 'Mở Landing' : 'Mở Demo'} <ArrowRight size={13} /></span>
+    </div>
+  );
+
+  const featureBlock = features.length > 0 ? (
+    <>
+      <div className="pc-features">
+        {features.map((f) => (
+          <button
+            key={f.zone}
+            className={`pc-feat ${active === f.zone ? 'is-on' : ''}`}
+            style={active === f.zone ? { borderColor: accent, color: accent } : {}}
+            onMouseEnter={() => setActive(f.zone)}
+            onMouseLeave={() => setActive(null)}
+            onClick={(e) => { e.stopPropagation(); onOpen?.(project); }}
+          >
+            <f.icon size={13} /> {f.title}
+          </button>
+        ))}
+      </div>
+      <div className={`pc-caption ${activeFeature ? 'is-visible' : ''}`}>
+        {activeFeature ? <span><MousePointerClick size={12} style={{ color: accent }} /> {activeFeature.desc}</span>
+          : <span className="pc-caption-idle">Di chuột vào một chức năng để xem nó dùng để làm gì →</span>}
+      </div>
+    </>
+  ) : (
+    <div className="pc-caption is-visible"><span><Sparkles size={12} style={{ color: accent }} /> {showcase.tagline}</span></div>
+  );
+
+  const techRow = (
+    <div className="tech-row">
+      {(project.tech || []).map((t) => (
+        <span key={t} className={`badge ${hoveredSkill === t ? 'primary' : ''}`} style={{ fontSize: '0.76rem', padding: '4px 10px' }}>{t}</span>
+      ))}
+    </div>
+  );
+
+  const cta = (
+    <button className="btn-neon pc-cta" style={{ borderColor: accent, color: accent }} onClick={() => onOpen?.(project)}>
+      {isLanding ? 'Xem Landing Page' : 'Xem demo chi tiết'} <ArrowRight size={16} />
+    </button>
+  );
+
+  /* Horizontal "case study" card — used for internal systems */
+  if (layout === 'row') {
+    return (
+      <article
+        className={`glass-card project-card--row ${reverse ? 'is-reverse' : ''} ${isHighlighted ? 'is-highlighted' : ''} ${dimmed ? 'is-dimmed' : ''}`}
+        style={{ '--accent': accent, transitionDelay: `${index * 120}ms` }}
+        data-reveal
+      >
+        <div className="pcrow-media">{preview}</div>
+        <div className="pcrow-body">
+          <span className="pcrow-eyebrow" style={{ color: accent }}><LayoutDashboard size={13} /> {showcase.label}</span>
+          <h3 className="pcrow-title">{project.title}</h3>
+          <p className="pcrow-sub">{project.subtitle}</p>
+          {metrics.length > 0 && (
+            <div className="pcrow-metrics">
+              {metrics.map((m, i) => <span key={i} className="pcrow-metric" style={{ borderColor: `${accent}55` }}><span style={{ color: accent }}>●</span> {m}</span>)}
+            </div>
+          )}
+          {featureBlock}
+          {techRow}
+          <div className="pcrow-actions">{cta}<span className="pcrow-period">{project.period}</span></div>
+        </div>
+      </article>
+    );
+  }
+
+  /* Compact gallery tile — used for landing pages */
+  return (
+    <div
+      className={`glass-card project-card project-card--rich project-card--tile ${isHighlighted ? 'is-highlighted' : ''} ${dimmed ? 'is-dimmed' : ''}`}
+      style={{ '--accent': accent, transitionDelay: `${index * 80}ms` }}
+      data-reveal
+    >
+      {preview}
+      <div className="project-head"><h3>{project.title}</h3>{project.period && <span className="badge project-role">{project.period}</span>}</div>
+      <p className="project-subtitle">{project.subtitle}</p>
+      {featureBlock}
+      {techRow}
+      {cta}
+    </div>
+  );
+}
+
+/* ---- Premium motion helpers ---- */
+
+function ScrollProgress() {
+  const [p, setP] = useState(0);
+  useEffect(() => {
+    const onScroll = () => {
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight;
+      setP(max > 0 ? (h.scrollTop / max) * 100 : 0);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => { window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onScroll); };
+  }, []);
+  return <div className="scroll-progress" aria-hidden="true"><span style={{ width: `${p}%` }} /></div>;
+}
+
+function CountUp({ value, suffix = '', duration = 1400 }) {
+  const [n, setN] = useState(0);
+  const ref = useRef(null);
+  const done = useRef(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setN(value); return; }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting && !done.current) {
+          done.current = true;
+          const start = performance.now();
+          const tick = (t) => {
+            const k = Math.min(1, (t - start) / duration);
+            setN(Math.round(value * (1 - Math.pow(1 - k, 3))));
+            if (k < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        }
+      });
+    }, { threshold: 0.4 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [value, duration]);
+  return <span ref={ref}>{n}{suffix}</span>;
 }
 
 /* ---- Small presentational helpers ---- */
