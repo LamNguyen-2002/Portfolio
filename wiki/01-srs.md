@@ -8,7 +8,7 @@
 ## 1. Giới thiệu
 
 ### 1.1 Mục đích
-Cung cấp một trang portfolio cá nhân chuyên nghiệp cho **Nguyễn Tùng Lâm**, đồng thời cho phép chủ sở hữu tự cập nhật nội dung (hồ sơ, dự án) qua một bảng quản trị bảo mật mà không cần can thiệp mã nguồn.
+Cung cấp một trang portfolio cá nhân chuyên nghiệp cho **Tùng Lâm Nguyễn**, đồng thời cho phép chủ sở hữu tự cập nhật nội dung (hồ sơ, dự án) qua một bảng quản trị bảo mật mà không cần can thiệp mã nguồn.
 
 ### 1.2 Phạm vi
 - **Trong phạm vi:** trang public giới thiệu bản thân; xác thực admin bằng JWT; CRUD hồ sơ & dự án; đổi mật khẩu; responsive; hiệu ứng nền.
@@ -35,7 +35,7 @@ Lấy trực tiếp từ CV của chủ sở hữu — khớp với [`backend/db
 ### 3.1 `profile`
 | Trường | Kiểu | Bắt buộc | Mô tả |
 | :-- | :-- | :-- | :-- |
-| `name` | string | ✅ | Họ tên — *Nguyễn Tùng Lâm* |
+| `name` | string | ✅ | Họ tên — *Tùng Lâm Nguyễn* |
 | `title` | string | ✅ | Chức danh — *UI/UX Designer · hướng tới Product Designer* |
 | `bio` | string | ✅ | Giới thiệu ngắn (mục tiêu nghề nghiệp) |
 | `avatar` | string (data URL) | – | Ảnh đại diện base64 — tải lên & nén ở Admin |

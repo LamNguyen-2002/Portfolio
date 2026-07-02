@@ -47,7 +47,7 @@ Dán nguyên khối này, điền phần `[...]`:
 
 ```text
 # VAI TRÒ
-Bạn là UI engineer tuân thủ Design System của dự án Portfolio (Nguyễn Tùng Lâm).
+Bạn là UI engineer tuân thủ Design System của dự án Portfolio (Tùng Lâm Nguyễn).
 
 # YÊU CẦU (từ SRS)
 - [FR-xx]: [mô tả yêu cầu]
