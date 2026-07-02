@@ -1,6 +1,6 @@
-# Portfolio cá nhân — Nguyễn Tùng Lâm | UI/UX Designer
+# Portfolio cá nhân — Tùng Lâm Nguyễn | UI/UX Designer
 
-Trang web Portfolio giới thiệu năng lực của **Nguyễn Tùng Lâm** — *UI/UX Designer hướng tới Product Designer* — tích hợp bảng điều khiển quản trị bí mật bảo mật bằng **JSON Web Token (JWT)** để tự cập nhật hồ sơ & dự án mà không cần sửa code.
+Trang web Portfolio giới thiệu năng lực của **Tùng Lâm Nguyễn** — *UI/UX Designer hướng tới Product Designer* — tích hợp bảng điều khiển quản trị bí mật bảo mật bằng **JSON Web Token (JWT)** để tự cập nhật hồ sơ & dự án mà không cần sửa code.
 
 Nội dung được lấy trực tiếp từ CV: tư duy thiết kế lấy người dùng làm trung tâm, Design System chặt chẽ, quy trình **Design–FE Handoff** và **ứng dụng AI bám sát tài liệu SRS**.
 

@@ -2,7 +2,7 @@
 
 ## 1. Hệ thống này là gì?
 
-**Personal Portfolio & JWT Admin Console** — một trang web giới thiệu năng lực cá nhân của **Nguyễn Tùng Lâm** (UI/UX Designer hướng tới Product Designer), kèm một **bảng quản trị bí mật** cho phép tự cập nhật hồ sơ và dự án mà không cần sửa code.
+**Personal Portfolio & JWT Admin Console** — một trang web giới thiệu năng lực cá nhân của **Tùng Lâm Nguyễn** (UI/UX Designer hướng tới Product Designer), kèm một **bảng quản trị bí mật** cho phép tự cập nhật hồ sơ và dự án mà không cần sửa code.
 
 Hệ thống được xây để phản ánh đúng cách mình làm việc:
 

@@ -1,6 +1,6 @@
 # 📚 Wiki — Portfolio & JWT Admin Console
 
-> Bộ tài liệu chuẩn (single source of truth) cho dự án **Portfolio cá nhân của Nguyễn Tùng Lâm**.
+> Bộ tài liệu chuẩn (single source of truth) cho dự án **Portfolio cá nhân của Tùng Lâm Nguyễn**.
 > Đây không chỉ là tài liệu kỹ thuật — nó là minh chứng cho cách mình làm sản phẩm: **đi từ đặc tả (SRS) → quy tắc thiết kế (Design Rules) → quy tắc lập trình (Dev Rules) → bàn giao (Handoff) → tự động hoá bằng AI.**
 
 Đúng với công việc thực tế của mình tại **Học viện Minh Trí Thành** và dự án **SPACE**: mọi thay đổi trên hệ thống đều bắt nguồn từ một tài liệu đặc tả, được chuẩn hoá thành Design System, rồi mới đưa vào code và AI.
